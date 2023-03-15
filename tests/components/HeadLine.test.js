@@ -3,7 +3,7 @@ import {
     screen 
 }                   from "@testing-library/vue";
 import { nextTick } from "vue";
-import HeadLine     from "@/components/HeadLine.vue";
+import HeadLine     from "@/components/job-search/HeadLine.vue";
 
 describe("HeadLine", () => {
     beforeEach(() => {

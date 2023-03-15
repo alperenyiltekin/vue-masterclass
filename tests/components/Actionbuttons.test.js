@@ -2,7 +2,7 @@ import  {
     render,
     screen 
 }                   from "@testing-library/vue";
-import ActionButton from "@/components/ActionButton.vue";
+import ActionButton from "@/components/shared/ActionButton.vue";
 
 describe("ActionButton", () => {
     it("render text", () => {

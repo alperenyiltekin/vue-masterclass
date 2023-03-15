@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import ActionButton from '@/components/ActionButton.vue';
-import ProfileImage from '@/components/ProfileImage.vue';
-import Subnav       from '@/components/Subnav.vue';
+import ActionButton from '@/components/shared/ActionButton.vue';
+import ProfileImage from '@/components/navigation/ProfileImage.vue';
+import Subnav       from '@/components/navigation/Subnav.vue';
  
 export default {
     name: "MainNav",
@@ -52,12 +52,12 @@ export default {
     },
     data() {
         return {
-            company: "Bobo Careers",
+            company: "Careers",
             url: "https://careers.google.com",
             menuItems: [
                 "Teams",
                 "Location",
-                "Life at Bobo Corp",
+                "Life at Corp",
                 "How we hire",
                 "Students",
                 "Jobs"

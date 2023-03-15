@@ -39,7 +39,7 @@ export default {
 
 <style scoped>
 button {
-    @apply rounded px-5 py-3 font-medium;
+    @apply px-5 py-3 font-medium;
 }
 
 .primary {
