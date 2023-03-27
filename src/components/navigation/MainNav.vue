@@ -2,23 +2,26 @@
     <header :class="['w-full', 'text-sm', headerHeightClass]">
         <div class="fixed top-0 left-0 w-full h-16 bg-white">
             <div class="flex h-full flex-nowrap border-b border-solid border-b-brand-gray-1 px-8 mx-auto">
-                <a 
-                    :href="url" 
-                    class="flex h-full items-center text-xl"
+                <router-link 
+                    :to  = "{ name: 'Home' }"
+                    class= "flex h-full items-center text-xl"
                 >
                     {{ company }}
-                </a>
+                </router-link>
 
                 <nav class="ml-12 h-full">
                     <ul class="flex h-full list-none">
                         <li 
                             class   = "ml-9 h-full first:ml-0"
                             v-for   = "item in menuItems"
-                            key     = "item"
+                            key     = "item.text"
                         >
-                            <a href="" class="flex h-full items-center py-2.5">
-                                {{ item }}
-                            </a>
+                            <router-link 
+                                :to     = "item.url" 
+                                class   = "flex h-full items-center py-2.5"
+                            >
+                                {{ item.text }}
+                            </router-link>
                         </li>
                     </ul>
                 </nav>
@@ -55,12 +58,12 @@ export default {
             company: "Careers",
             url: "https://careers.google.com",
             menuItems: [
-                "Teams",
-                "Location",
-                "Life at Corp",
-                "How we hire",
-                "Students",
-                "Jobs"
+                { text: "Teams", url: "/" },
+                { text: "Locations", url: "/" },
+                { text: "Life at Corp", url: "/" },
+                { text: "How we hire", url: "/" },
+                { text: "Students", url: "/" },
+                { text: "Jobs", url: "/jobs/results" },
             ],
             isLoggedIn: false
         }

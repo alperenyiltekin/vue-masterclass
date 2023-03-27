@@ -1,7 +1,7 @@
 <template>
     <form 
-        class="flex h-12 items-center w-full rounded-3xl border border-solid border-brand-gray-3" 
-        action=""
+        class   = "flex h-12 items-center w-full rounded-3xl border border-solid border-brand-gray-3" 
+        @submit.prevent = "searchJobs"
     >
         <font-awesome-icon 
             :icon   = "['fas', 'search']" 
@@ -9,12 +9,16 @@
         />
         <div class="flex flex-1 flex-nowrap h-full text-base font-light">
             <div class="flex h-full flex-1 relative items-center pr-3">
-                <label class="absolute left-0 -top-10">Role</label>
-                <input 
+                <label 
+                    for     = "role"
+                    class   = "absolute left-0 -top-10"
+                >
+                    Role
+                </label>
+                <text-input
+                    id          = "role" 
+                    placeholder = "Software Engineer"
                     v-model     = "role"
-                    type        = "text"
-                    placeholder = "Software Engineer" 
-                    class       = "w-full text-lg font-normal focus:outline" 
                 />
             </div>
             <span class="flex items-center h-full border-l border-r border-brand-gray-3 bg-brand-gray-2 px-3">
@@ -22,13 +26,18 @@
             </span>
 
             <div class="flex h-full flex-1 relative items-center pl-3">
-                <label class="absolute left-0 -top-10">Where?</label>
-                <input 
+                <label 
+                    for     = "location"
+                    class   = "absolute left-0 -top-10"
+                >
+                    Where?
+                </label>
+                <text-input 
+                    id          = "location"
+                    placeholder = "Software Engineer" 
                     v-model     = "location"
-                    type        = "text"
-                    placeholder = "Istanbul" 
-                    class       = "w-full text-lg font-normal focus:outline-none"
                 />
+
             </div>
         </div>
 
@@ -38,11 +47,13 @@
 
 <script>
 import ActionButton from '@/components/shared/ActionButton.vue';
+import TextInput    from '@/components/shared/TextInput.vue';
 
 export default {
     name: "JobSearchForm",
     components: {
-        ActionButton
+        ActionButton,
+        TextInput
     },
     data () {
         return {
@@ -51,7 +62,15 @@ export default {
         }
     },
     methods: {
-        
+        searchJobs() {
+            this.$router.push({
+                name    : "JobResults",
+                query   : {
+                    role    : this.role,
+                    location: this.location
+                }
+            })
+        }
     }
 }
 </script>
