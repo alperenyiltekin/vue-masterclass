@@ -1,12 +1,16 @@
 import { 
     render, 
     screen 
-}                           from "@testing-library/vue";
-import userEvent            from "@testing-library/user-event";
-import { RouterLinkStub }   from "@vue/test-utils";
-import MainNav              from '@/components/navigation/MainNav.vue';
+}                               from "@testing-library/vue";
+import userEvent                from "@testing-library/user-event";
+import { RouterLinkStub }       from "@vue/test-utils";
+import { createTestingPinia }   from "@pinia/testing";
+import MainNav                  from '@/components/navigation/MainNav.vue';
+import { useUserStore }         from "@/stores/user";
 
 describe("MainNav", () => {
+    const pinia = createTestingPinia({ stubActions: false });
+
     const $route = {
         name: "Home"
     };
@@ -14,6 +18,7 @@ describe("MainNav", () => {
     const renderMainNav = () => {
         render(MainNav, {
             global: {
+                plugins: [ pinia ],
                 mocks: {
                     $route
                 },
@@ -52,6 +57,8 @@ describe("MainNav", () => {
         it("displays user profile image", async () => {
             renderMainNav();
             
+            const userStore = useUserStore();
+
             let profile = screen.queryByRole("img", {
                 name: /profile-image/i
             });
@@ -60,6 +67,8 @@ describe("MainNav", () => {
             const loginButton = screen.getByRole("button", {
                 name: /Sign In/i,
             });
+
+            userStore.isLoggedIn = true;
             await userEvent.click(loginButton);
 
             profile = screen.queryByRole("img", {

@@ -42,9 +42,14 @@
 </template>
 
 <script>
-import ActionButton from '@/components/shared/ActionButton.vue';
-import ProfileImage from '@/components/navigation/ProfileImage.vue';
-import Subnav       from '@/components/navigation/Subnav.vue';
+import { 
+    mapActions, 
+    mapState 
+}                       from "pinia";
+import { useUserStore } from "@/stores/user";
+import ActionButton     from '@/components/shared/ActionButton.vue';
+import ProfileImage     from '@/components/navigation/ProfileImage.vue';
+import Subnav           from '@/components/navigation/Subnav.vue';
  
 export default {
     name: "MainNav",
@@ -65,21 +70,19 @@ export default {
                 { text: "Students", url: "/" },
                 { text: "Jobs", url: "/jobs/results" },
             ],
-            isLoggedIn: false
         }
     },
     computed: {
+        ...mapState(useUserStore, [ "isLoggedIn" ]),
         headerHeightClass() {
             return {
-                "h-16": !this.isLoggedIn,
-                "h-32": this.isLoggedIn
+                "h-16": this.isLoggedIn,
+                "h-32": !this.isLoggedIn
             }
         }
     },
     methods: {
-        loginUser() {
-            this.isLoggedIn = true;
-        }
+        ...mapActions(useUserStore, [ "loginUser" ])
     }
 }
 </script>
