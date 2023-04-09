@@ -34,7 +34,14 @@
 </template>
 
 <script>
-import axios            from "axios";
+import {
+    mapActions,
+    mapState
+}                       from "pinia";
+import {
+    useJobsStore,
+    FETCH_JOBS
+}                       from "@/stores/jobs";
 import JobListingItem   from "@/components/job-results/JobListingItem.vue";
  
 export default {
@@ -42,12 +49,11 @@ export default {
     components: {
         JobListingItem
     },
-    data() {
-        return {
-            jobs: [],
-        }
-    },
+    
     computed: {
+        ...mapState(useJobsStore, {
+            jobs: "jobs"
+        }),
         displayJobs() {
             const pageSize = this.$route.query.page || "1";
             const pageNumber = Number.parseInt(pageSize);
@@ -70,9 +76,10 @@ export default {
         }
     },
     async mounted() {
-        const baseURL = import.meta.env.VITE_APP_API_URL
-        const res = await axios.get(`${baseURL}/jobs`);
-        this.jobs = res.data;
+        this.FETCH_JOBS();
+    },
+    methods: {
+        ...mapActions(useJobsStore, [ FETCH_JOBS ]),
     }
 }
 </script>
