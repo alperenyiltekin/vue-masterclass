@@ -63,7 +63,7 @@ export default {
             company: "Careers",
             url: "https://careers.google.com",
             menuItems: [
-                { text: "Teams", url: "/" },
+                { text: "Teams", url: "/teams" },
                 { text: "Locations", url: "/" },
                 { text: "Life at Corp", url: "/" },
                 { text: "How we hire", url: "/" },

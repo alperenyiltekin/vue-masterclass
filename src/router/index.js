@@ -5,22 +5,28 @@ import {
 import HomeView         from "@/views/HomeView.vue";
 import JobResultView    from "@/views/JobResultView.vue";
 import JobView          from "@/views/JobView.vue";
+import TeamsView        from "@/views/TeamsView.vue";
 
 const routes = [
     {
-        path: "/",
-        name: "Home",
-        component: HomeView
+        path        : "/",
+        name        : "Home",
+        component   : HomeView
     },
     {
-        path: "/jobs/results",
-        name: "JobResults",
-        component: JobResultView
+        path        : "/jobs/results",
+        name        : "JobResults",
+        component   : JobResultView
     },
     {
-        path: "/jobs/results/:id",
-        name: "JobListing",
-        component: JobView
+        path        : "/jobs/results/:id",
+        name        : "JobListing",
+        component   : JobView
+    },
+    {
+        path        : "/teams",
+        name        : "Teams",
+        component   : TeamsView
     },
 ]
 
