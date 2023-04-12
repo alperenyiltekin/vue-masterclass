@@ -41,7 +41,7 @@ import {
 import {
     useJobsStore,
     FETCH_JOBS,
-    FILTER_JOB_ORGANIZATION
+    FILTERED_ALL_JOBS
 }                       from "@/stores/jobs";
 import JobListingItem   from "@/components/job-results/JobListingItem.vue";
  
@@ -53,7 +53,7 @@ export default {
     
     computed: {
         ...mapState(useJobsStore, {
-            FILTER_JOB_ORGANIZATION
+            FILTERED_ALL_JOBS
         }),
         displayJobs() {
             const pageSize = this.$route.query.page || "1";
@@ -61,7 +61,7 @@ export default {
             const firstJobIdx = (pageNumber - 1) * 10;
             const lastJobIdx = pageNumber * 10;
 
-            return this.FILTER_JOB_ORGANIZATION.slice(firstJobIdx, lastJobIdx)
+            return this.FILTERED_ALL_JOBS.slice(firstJobIdx, lastJobIdx)
         },
         currentPage() {
             return Number.parseInt(this.$route.query.page || "1");
@@ -72,7 +72,7 @@ export default {
         },
         nextPage() {
             const next = this.currentPage + 1;
-            const max = Math.ceil(this.FILTER_JOB_ORGANIZATION.length / 10);
+            const max = Math.ceil(this.FILTERED_ALL_JOBS.length / 10);
             return next <= max ? next : undefined; 
         }
     },

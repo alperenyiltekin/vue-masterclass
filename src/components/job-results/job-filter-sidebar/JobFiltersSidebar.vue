@@ -14,7 +14,27 @@
             <accordion
                 header="Job types"
             >
-                Empty for now
+                <div class="mt-5">
+                    <fieldset>
+                        <ul class="flex flew-row flex-wrap">
+                            <li 
+                                v-for   = "job in UNIQUE_JOB_TYPES" 
+                                :key    = "job"
+                                class   = "h-8 w-1/2"
+                            >
+                                <input 
+                                    type    = "checkbox" 
+                                    v-model = "selectedJobTypes"
+                                    :value  = "job"
+                                    :id     = "job"
+                                    class   = "mr-3"
+                                    @change = "selectedJobType"
+                                />
+                                <label :for="job">{{ job }}</label>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
             </accordion>
             <accordion
                 header="Organizations"
@@ -52,11 +72,13 @@ import {
 }                           from "pinia";
 import {
     useJobsStore,
-    UNIQUE_ORGANIZATIONS
+    UNIQUE_ORGANIZATIONS,
+    UNIQUE_JOB_TYPES
 }                           from "@/stores/jobs";
 import {
     useUserStore,
-    ADD_SELECTED_ORGANIZATIONS
+    ADD_SELECTED_ORGANIZATIONS,
+    ADD_SELECTED_JOB_TYPES
 }                           from "@/stores/user";
 import ActionButton         from "@/components/shared/ActionButton.vue";
 import Accordion            from "@/components/shared/Accordion.vue";
@@ -69,16 +91,28 @@ export default {
     },
     data() {
         return {
-            selectedOrganizations: [],
+            selectedOrganizations   : [],
+            selectedJobTypes        : [],
         }
     },
     computed: {
-        ...mapState(useJobsStore, [UNIQUE_ORGANIZATIONS])
+        ...mapState(useJobsStore, [ UNIQUE_ORGANIZATIONS ]),
+        ...mapState(useJobsStore, [ UNIQUE_JOB_TYPES ])
     },
     methods: {
-        ...mapActions(useUserStore, [ADD_SELECTED_ORGANIZATIONS]),
+        ...mapActions(useUserStore, [ ADD_SELECTED_ORGANIZATIONS ]),
+        ...mapActions(useUserStore, [ ADD_SELECTED_JOB_TYPES ]),
         selectedOrganization() {
             this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations);
+            this.$router.push({
+                name: "JobResults",
+            })
+        },
+        selectedJobType() {
+            this.ADD_SELECTED_JOB_TYPES(this.selectedJobTypes);
+            this.$router.push({
+                name: "JobResults",
+            })
         }
     }
 }
