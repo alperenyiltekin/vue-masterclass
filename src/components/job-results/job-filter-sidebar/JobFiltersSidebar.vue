@@ -22,37 +22,20 @@
                 <div class="mt-5">
                     <fieldset>
                         <ul class="flex flew-row flex-wrap">
-                            <li class="h-8 w-1/2">
+                            <li 
+                                v-for   = "org in UNIQUE_ORGANIZATIONS" 
+                                :key    = "org"
+                                class   = "h-8 w-1/2"
+                            >
                                 <input 
                                     type    = "checkbox" 
-                                    id      = "VueTube"
+                                    v-model = "selectedOrganizations"
+                                    :value  = "org"
+                                    :id     = "org"
                                     class   = "mr-3"
+                                    @change = "selectedOrganization"
                                 />
-                                <label for="VueTube">VueTube</label>
-                            </li>
-                            <li class="h-8 w-1/2">
-                                <input 
-                                    type    = "checkbox" 
-                                    id      = "Between Vue and Me"
-                                    class   = "mr-3"
-                                />
-                                <label for="Between Vue and Me">Between Vue</label>
-                            </li>
-                            <li class="h-8 w-1/2">
-                                <input 
-                                    type    = "checkbox" 
-                                    id      = "Et Vue Brute"
-                                    class   = "mr-3"
-                                />
-                                <label for="Et Vue Brute">Et Vue Brute</label>
-                            </li>
-                            <li class="h-8 w-1/2">
-                                <input 
-                                    type    = "checkbox" 
-                                    id      = "Vue and a Half Men"
-                                    class   = "mr-3"
-                                />
-                                <label for="Vue and a Half Men">Vue and a Half Men</label>
+                                <label :for="org">{{ org }}</label>
                             </li>
                         </ul>
                     </fieldset>
@@ -63,14 +46,40 @@
 </template>
 
 <script>
-import ActionButton from "@/components/shared/ActionButton.vue";
-import Accordion    from "@/components/shared/Accordion.vue";
+import { 
+    mapState,
+    mapActions
+}                           from "pinia";
+import {
+    useJobsStore,
+    UNIQUE_ORGANIZATIONS
+}                           from "@/stores/jobs";
+import {
+    useUserStore,
+    ADD_SELECTED_ORGANIZATIONS
+}                           from "@/stores/user";
+import ActionButton         from "@/components/shared/ActionButton.vue";
+import Accordion            from "@/components/shared/Accordion.vue";
 
 export default {
     name: "JobFiltersSidebar",
     components: {
         ActionButton,
         Accordion
+    },
+    data() {
+        return {
+            selectedOrganizations: [],
+        }
+    },
+    computed: {
+        ...mapState(useJobsStore, [UNIQUE_ORGANIZATIONS])
+    },
+    methods: {
+        ...mapActions(useUserStore, [ADD_SELECTED_ORGANIZATIONS]),
+        selectedOrganization() {
+            this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations);
+        }
     }
 }
 </script>

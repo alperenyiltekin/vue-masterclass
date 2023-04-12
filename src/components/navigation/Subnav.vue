@@ -7,7 +7,7 @@
                     class   = "mr-3"
                 />
                 <span>
-                    <span class="text-brand-green-1">16</span> jobs matched
+                    <span class="text-brand-green-1">{{ FILTER_JOB_ORGANIZATION.length }}</span> jobs matched
                 </span>
             </div>
         </div>
@@ -15,9 +15,16 @@
 </template>
 
 <script>
+import { mapState }         from "pinia";
+import {
+    useJobsStore,
+    FILTER_JOB_ORGANIZATION
+}                           from "@/stores/jobs";
+
 export default {
     name: "Subnav",
     computed: {
+        ...mapState(useJobsStore, [FILTER_JOB_ORGANIZATION]),
         onJobResultsPage() {
             console.log(this.$route)
             return this.$route.name === "JobResults"
