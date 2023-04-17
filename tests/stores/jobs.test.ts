@@ -1,3 +1,5 @@
+import type { Mock }    from "vitest";
+import type { Job }     from "@/api/types";
 import {
     createPinia,
     setActivePinia
@@ -6,6 +8,7 @@ import axios            from "axios";
 import { useJobsStore } from "@/stores/jobs";
 
 vi.mock("axios");
+const axiosGetMock = axios.get as Mock;
 
 describe('state', () => {
     beforeEach(() => {
@@ -26,7 +29,7 @@ describe('actions', () => {
 
     describe('FETCH_JOBS', () => {
         it("make api request", async () => {
-            axios.get.mockResolvedValue({ data: [ "job1", "job2" ] });
+            axiosGetMock.mockResolvedValue({ data: [ "job1", "job2" ] });
             const store = useJobsStore();
             await store.FETCH_JOBS();
             
@@ -47,7 +50,8 @@ describe('actions', () => {
                     { organization: "Amazon" },
                     { organization: "Netflix" },
                     { organization: "Netflix" },
-                ]
+                ] as Job[];
+                
                 const result = store.UNIQUE_ORGANIZATIONS;
 
                 expect(result).toEqual(new Set([ "Google", "Amazon", "Netflix" ]));

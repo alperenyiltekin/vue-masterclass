@@ -65,55 +65,37 @@
     </div>
 </template>
 
-<script>
-import { 
-    mapState,
-    mapActions
-}                           from "pinia";
+<script setup>
+import { ref, computed }    from "vue";
+import { useRouter }        from "vue-router";
 import {
     useJobsStore,
-    UNIQUE_ORGANIZATIONS,
-    UNIQUE_JOB_TYPES
+    
 }                           from "@/stores/jobs";
 import {
     useUserStore,
-    ADD_SELECTED_ORGANIZATIONS,
-    ADD_SELECTED_JOB_TYPES
+   
 }                           from "@/stores/user";
 import ActionButton         from "@/components/shared/ActionButton.vue";
 import Accordion            from "@/components/shared/Accordion.vue";
 
-export default {
-    name: "JobFiltersSidebar",
-    components: {
-        ActionButton,
-        Accordion
-    },
-    data() {
-        return {
-            selectedOrganizations   : [],
-            selectedJobTypes        : [],
-        }
-    },
-    computed: {
-        ...mapState(useJobsStore, [ UNIQUE_ORGANIZATIONS ]),
-        ...mapState(useJobsStore, [ UNIQUE_JOB_TYPES ])
-    },
-    methods: {
-        ...mapActions(useUserStore, [ ADD_SELECTED_ORGANIZATIONS ]),
-        ...mapActions(useUserStore, [ ADD_SELECTED_JOB_TYPES ]),
-        selectedOrganization() {
-            this.ADD_SELECTED_ORGANIZATIONS(this.selectedOrganizations);
-            this.$router.push({
-                name: "JobResults",
-            })
-        },
-        selectedJobType() {
-            this.ADD_SELECTED_JOB_TYPES(this.selectedJobTypes);
-            this.$router.push({
-                name: "JobResults",
-            })
-        }
-    }
+const selectedJobTypes          = ref([]);
+const selectedOrganizations     = ref([]);
+const jobsStore                 = useJobsStore();
+
+const UNIQUE_JOB_TYPES          = computed(() => jobsStore.UNIQUE_JOB_TYPES);
+const UNIQUE_ORGANIZATIONS      = computed(() => jobsStore.UNIQUE_ORGANIZATIONS);
+
+const userStore = useUserStore();
+const router    = useRouter();
+
+const selectedJobType = () => {
+    userStore.ADD_SELECTED_JOB_TYPES(selectedJobTypes.value);
+    router.push({ name: "JobResults" })
 }
+const selectedOrganization = () => {
+    userStore.ADD_SELECTED_ORGANIZATIONS(selectedOrganizations.value);
+    router.push({ name: "JobResults" })
+}
+
 </script>
