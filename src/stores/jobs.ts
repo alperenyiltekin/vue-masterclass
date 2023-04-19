@@ -9,6 +9,8 @@ export const UNIQUE_JOB_TYPES               = "UNIQUE_JOB_TYPES";
 export const FILTERED_ALL_JOBS              = "FILTERED_ALL_JOBS";
 export const INCLUDE_JOB_IN_ORGANIZATION    = "INCLUDE_JOB_IN_ORGANIZATION";
 export const INCLUDE_JON_IN_JOB_TYPE        = "INCLUDE_JON_IN_JOB_TYPE";
+export const INCLUDE_JOB_IN_DEGREE          = "INCLUDE_JOB_IN_DEGREE";
+export const INCLUDE_JOB_IN_SEARCH          = "INCLUDE_JOB_IN_SEARCH";
 
 export interface JobsState {
     jobs: Job[]
@@ -52,7 +54,23 @@ export const useJobsStore = defineStore("jobs", {
         [FILTERED_ALL_JOBS](state): Job[] {
             return state.jobs
                 .filter(job => this.INCLUDE_JOB_IN_ORGANIZATION(job))
-                .filter(job => this.INCLUDE_JON_IN_JOB_TYPE(job));
+                .filter(job => this.INCLUDE_JON_IN_JOB_TYPE(job))
+                .filter(job => this.INCLUDE_JOB_IN_DEGREE(job))
+                .filter(job => this.INCLUDE_JOB_IN_SEARCH(job));
+        },
+        [INCLUDE_JOB_IN_DEGREE]: () => (job: Job) => {
+            const store = useUserStore();
+            if (!store.selectedDegrees.length)
+                return true;
+
+            return store.selectedDegrees.includes(job.degree);
+        },
+        [INCLUDE_JOB_IN_SEARCH]: () => (job: Job) => {
+            const store = useUserStore();
+           
+            return job.title
+                .toLocaleLowerCase()
+                .includes(store.skillSearchTerm.toLocaleLowerCase());
         }
     }
 })

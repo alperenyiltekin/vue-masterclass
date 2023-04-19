@@ -41,7 +41,8 @@
     </header>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref, computed } from "vue";
 import { 
     mapActions, 
     mapState 
@@ -50,39 +51,45 @@ import { useUserStore } from "@/stores/user";
 import ActionButton     from '@/components/shared/ActionButton.vue';
 import ProfileImage     from '@/components/navigation/ProfileImage.vue';
 import Subnav           from '@/components/navigation/Subnav.vue';
+
+const menuItems = ref(
+    [
+        { text: "Teams", url: "/teams" },
+        { text: "Locations", url: "/" },
+        { text: "Life at Corp", url: "/" },
+        { text: "How we hire", url: "/" },
+        { text: "Students", url: "/" },
+        { text: "Jobs", url: "/jobs/results" },
+    ],
+);
+
+const userStore = useUserStore();
+const loginUser = userStore.LOGIN_USER;
+const isLoggedIn = computed(() => userStore.isLoggedIn);
+const headerHeightClass = computed(() => ({
+    "h-16": isLoggedIn,
+    "h-32": !isLoggedIn
+}));
+
+// export default {
  
-export default {
-    name: "MainNav",
-    components: {
-        ActionButton,
-        ProfileImage,
-        Subnav
-    },
-    data() {
-        return {
-            company: "Careers",
-            url: "https://careers.google.com",
-            menuItems: [
-                { text: "Teams", url: "/teams" },
-                { text: "Locations", url: "/" },
-                { text: "Life at Corp", url: "/" },
-                { text: "How we hire", url: "/" },
-                { text: "Students", url: "/" },
-                { text: "Jobs", url: "/jobs/results" },
-            ],
-        }
-    },
-    computed: {
-        ...mapState(useUserStore, [ "isLoggedIn" ]),
-        headerHeightClass() {
-            return {
-                "h-16": this.isLoggedIn,
-                "h-32": !this.isLoggedIn
-            }
-        }
-    },
-    methods: {
-        ...mapActions(useUserStore, [ "loginUser" ])
-    }
-}
+//     data() {
+//         return {
+//             company: "Careers",
+//             url: "https://careers.google.com",
+
+//         }
+//     },
+//     computed: {
+//         ...mapState(useUserStore, [ "isLoggedIn" ]),
+//         headerHeightClass() {
+//             return {
+
+//             }
+//         }
+//     },
+//     methods: {
+//         ...mapActions(useUserStore, [ "loginUser" ])
+//     }
+// }
 </script>

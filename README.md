@@ -1,3 +1,6 @@
-# job-search
+# Job Search
 
-Progressing...
+Job Listing, filtering, search app 
+
+## To do
+Test files should be refactor later

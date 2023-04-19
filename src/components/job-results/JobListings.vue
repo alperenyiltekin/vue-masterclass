@@ -33,33 +33,34 @@
     </main>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { 
     computed, 
     onMounted
 }                           from "vue";
 import { useRoute }         from "vue-router";
-import {
-    useJobsStore
-}                           from "@/stores/jobs";
+import { useJobsStore }     from "@/stores/jobs";
+import { useDegreesStore }  from "@/stores/degrees";
 import JobListingItem       from "@/components/job-results/JobListingItem.vue";
-import usePrevAndNextPages  from "@/composables/usePrevNextPages.js";
+import usePrevAndNextPages  from "@/composables/usePrevNextPages";
 
-const store = useJobsStore();
-onMounted(store.FETCH_JOBS);
+const jobsStore         = useJobsStore();
+const degreesStore      = useDegreesStore();
 
-const FILTERED_ALL_JOBS = computed(() => store.FILTERED_ALL_JOBS);
+onMounted(jobsStore.FETCH_JOBS);
+onMounted(degreesStore.FETCH_DEGREES);
+
+const FILTERED_ALL_JOBS = computed(() => jobsStore.FILTERED_ALL_JOBS);
 
 const route = useRoute();
 
-const currentPage   = computed(() => Number.parseInt(route.query.page || "1"));
+const currentPage   = computed(() => Number.parseInt((route.query.page as string) || "1"));
 const maxPage       = computed(() => Math.ceil(FILTERED_ALL_JOBS.value.length / 10));
 
 const { prevPage, nextPage } = usePrevAndNextPages(currentPage, maxPage);
 
 const displayJobs = computed(() => {
-    const pageSize      = currentPage.value;
-    const pageNumber    = Number.parseInt(pageSize);
+    const pageNumber    = currentPage.value;
     const firstJobIdx   = (pageNumber - 1) * 10;
     const lastJobIdx    = pageNumber * 10;
     return FILTERED_ALL_JOBS.value.slice(firstJobIdx, lastJobIdx)

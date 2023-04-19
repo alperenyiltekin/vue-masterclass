@@ -5,15 +5,37 @@
                 <h3 class="my-4 text-base font-semibold">What do you want to do?</h3>
                 <div class="flex items-center text-sm">
                     <action-button 
-                        text= "Clear Filters"
-                        type= "secondary"
+                        text    = "Clear Filters"
+                        type    = "secondary"
+                        @click  = "clearFilters"
                     />
                 </div>
             </div>
-            <accordion type="Degree" />
-            <accordion
-                header="Job types"
-            >
+            <JobFiltersSidebarSkills />
+            <accordion header="Degree">
+                <div class="mt-5">
+                    <fieldset>
+                        <ul class="flex flew-row flex-wrap">
+                            <li 
+                                v-for   = "deg in UNIQUE_DEGREES" 
+                                :key    = "deg"
+                                class   = "h-8 w-1/2"
+                            >
+                                <input 
+                                    type    = "checkbox" 
+                                    v-model = "selectedDegrees"
+                                    :value  = "deg"
+                                    :id     = "deg"
+                                    class   = "mr-3"
+                                    @change = "selectedDegree"
+                                />
+                                <label :for="deg">{{ deg }}</label>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </accordion>
+            <accordion header="Job types">
                 <div class="mt-5">
                     <fieldset>
                         <ul class="flex flew-row flex-wrap">
@@ -36,9 +58,7 @@
                     </fieldset>
                 </div>
             </accordion>
-            <accordion
-                header="Organizations"
-            >
+            <accordion header="Organizations">
                 <div class="mt-5">
                     <fieldset>
                         <ul class="flex flew-row flex-wrap">
@@ -65,37 +85,66 @@
     </div>
 </template>
 
-<script setup>
-import { ref, computed }    from "vue";
-import { useRouter }        from "vue-router";
+<script lang="ts" setup>
 import {
-    useJobsStore,
-    
-}                           from "@/stores/jobs";
+    ref,
+    computed,
+    onMounted
+}                               from "vue";
 import {
-    useUserStore,
-   
-}                           from "@/stores/user";
-import ActionButton         from "@/components/shared/ActionButton.vue";
-import Accordion            from "@/components/shared/Accordion.vue";
+    useRouter,
+    useRoute
+}                               from "vue-router";
+import { useJobsStore }         from "@/stores/jobs";
+import { useUserStore }         from "@/stores/user";
+import { useDegreesStore }      from "@/stores/degrees";
+import ActionButton             from "@/components/shared/ActionButton.vue";
+import Accordion                from "@/components/shared/Accordion.vue";
+import JobFiltersSidebarSkills  from "@/components/job-results/job-filter-sidebar/JobFilterSidebarSkills.vue";
 
 const selectedJobTypes          = ref([]);
 const selectedOrganizations     = ref([]);
+const selectedDegrees           = ref([]);
+
 const jobsStore                 = useJobsStore();
+const degreesStore              = useDegreesStore();
+const userStore                 = useUserStore();
 
 const UNIQUE_JOB_TYPES          = computed(() => jobsStore.UNIQUE_JOB_TYPES);
 const UNIQUE_ORGANIZATIONS      = computed(() => jobsStore.UNIQUE_ORGANIZATIONS);
+const UNIQUE_DEGREES            = computed(() => degreesStore.UNIQUE_DEGREES);
 
-const userStore = useUserStore();
-const router    = useRouter();
+const router = useRouter();
+const route = useRoute();
+
+const parseSkillsSearch = () => {
+    const role = (route.query.role as string) || "";
+    userStore.UPDATE_SKILL_SEARCH_TERM(role);
+}
+
 
 const selectedJobType = () => {
     userStore.ADD_SELECTED_JOB_TYPES(selectedJobTypes.value);
     router.push({ name: "JobResults" })
 }
+
 const selectedOrganization = () => {
     userStore.ADD_SELECTED_ORGANIZATIONS(selectedOrganizations.value);
     router.push({ name: "JobResults" })
 }
 
+const selectedDegree = () => {
+    userStore.ADD_SELECTED_DEGREES(selectedDegrees.value);
+    router.push({ name: "JobResults" })
+}
+
+const clearFilters = () => {
+    userStore.CLEAR_FILTERS();
+    selectedOrganizations.value = [];
+    selectedJobTypes.value      = [];
+    selectedDegrees.value       = [];
+        
+}
+
+onMounted(parseSkillsSearch);
 </script>

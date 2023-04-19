@@ -1,13 +1,16 @@
+import type { Mock }            from "vitest";
 import { 
     render, 
     screen 
-}                   from "@testing-library/vue";
-import SubNav       from "@/components/navigation/Subnav.vue";
-import { useRoute } from "vue-router";
-import { createTestingPinia } from "@pinia/testing";
-import { useJobsStore } from "../../src/stores/jobs";
+}                               from "@testing-library/vue";
+import SubNav                   from "@/components/navigation/Subnav.vue";
+import { useRoute }             from "vue-router";
+import { createTestingPinia }   from "@pinia/testing";
+import { useJobsStore }         from "@/stores/jobs";
 
 vi.mock("vue-router");
+
+const useRouteMock = useRoute as Mock;
 
 describe("Subnav", () => {
     const renderTheSubnav = () => {
@@ -31,13 +34,14 @@ describe("Subnav", () => {
 
     describe("user on the job page", () => {
         it("displays job count", async () => {
-            useRoute.mockReturnValue({
+            useRouteMock.mockReturnValue({
                 name: "JobResults"
             })
-
+            
             const { jobsStore } = renderTheSubnav();
-
+            
             const numberOfJobs = 16;
+            // @ts-expect-error
             jobsStore.FILTERED_ALL_JOBS = Array(jobCount).fill({});
             const jobCount = await screen.findByText(numberOfJobs);
             expect(jobCount).toBeInTheDocument();
@@ -46,13 +50,14 @@ describe("Subnav", () => {
 
     describe("user not on the job page", () => {
         it("no displays job count", async () => {
-            useRoute.mockReturnValue({
+            useRouteMock.mockReturnValue({
                 name: "Home"
             })
 
             const { jobsStore } = renderTheSubnav();
 
             const numberOfJobs = 16;
+            // @ts-expect-error
             jobsStore.FILTERED_ALL_JOBS = Array(jobCount).fill({});
             const jobCount = await screen.findByText(numberOfJobs);
             expect(jobCount).toBeInTheDocument();
